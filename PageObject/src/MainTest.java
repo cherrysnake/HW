@@ -12,6 +12,7 @@ import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+
 public class MainTest {
 
   //  public static void main(String[] args) {
@@ -41,24 +42,22 @@ public class MainTest {
 
         }
 
-        @Disabled
-
-         public void FirstTest() {
-
-            driver.get(IUA_URL);
-            driver.navigate().to(IUA_URL);
-
-            logPage = PageFactory.initElements(driver, LoginPage.class);
-            logPage.loggingIn();
-
-            sendMailPage = PageFactory.initElements(driver, SendMail.class);
-            sendMailPage.SendOneMail();
-
-        }
 
     @Test
 
-    public void SecondTest() {
+    public void Test()  {
+
+        //sending mail from i.ua
+        driver.get(IUA_URL);
+        driver.navigate().to(IUA_URL);
+
+        logPage = PageFactory.initElements(driver, LoginPage.class);
+        logPage.loggingIn();
+
+        sendMailPage = PageFactory.initElements(driver, SendMail.class);
+        sendMailPage.SendOneMail();
+
+        //mailinator verification
 
         driver.get(Mailignator_URL);
         driver.navigate().to(Mailignator_URL);
@@ -66,27 +65,21 @@ public class MainTest {
         mailinatorCheck = PageFactory.initElements(driver, MailinatorCheck.class);
         mailinatorCheck.OpenMail();
         String sender = mailinatorCheck.GetSender();
-        assertEquals(loginName, sender, "Sender is correct");
+        assertEquals(loginName, sender, "Sender is not correct");
 
-        try {
-            mailinatorCheck.GoToMail();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         String subject = mailinatorCheck.GetSubject();
-        assertEquals(subjectText, subject, "Subject is correct");
+        assertEquals(subjectText, subject, "Subject is not correct");
+
+        //failed since cannot figure out the way to take message body :(
+        mailinatorCheck.GoToMail();
         String text = mailinatorCheck.GetText();
-        assertEquals(textText, text, "Text is correct");
-
-
-
+        assertEquals(textText, text, "Text is not correct");
     }
-
 
         @AfterEach
 
-        public void shutDown () {
-            driver.close();
+        public void shutDown(){
+            driver.quit();
         }
     }
 

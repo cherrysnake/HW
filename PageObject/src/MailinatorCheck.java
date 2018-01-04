@@ -1,11 +1,20 @@
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
 
 public class MailinatorCheck {
 
+
         private WebDriver driver;
+
+    private void waitForVisibility(WebElement element) throws Error{
+        new WebDriverWait(driver, 60).until(ExpectedConditions.visibilityOf(element));
+    }
 
         public MailinatorCheck(WebDriver driver) {
             this.driver = driver;
@@ -14,9 +23,12 @@ public class MailinatorCheck {
 
         private final String inboxNameId = "inboxfield";
         private final String goButtonPath = "html/body/section[1]/div/div[3]/div[2]/div[2]/div[1]/span/button";
-        private final String openMailPath = ".//*[@id='row_1515020908-2000225771967-cherrysnake']/div/div[3]";
-        private final String subjectPath = ".//*[@id='msgpane']/div[1]/div[1]";
+        private final String openMailPath = ".//*[@id='inboxpane']/li[1]/div/div[3]";
+        private final String subjectPath = ".//*[@id='inboxpane']/li[1]/div/div[4]";
+        private final String mailFrameName = "msg_body";
         private final String textPath = "html/body";
+
+
 
         private String inboxNameText = "cherrysnake";
         private String textText = "some text";
@@ -37,23 +49,31 @@ public class MailinatorCheck {
         @FindBy(xpath = textPath)
         WebElement text;
 
-        public MailinatorCheck OpenMail() {
+        @FindBy(name = mailFrameName)
+        WebElement mailFrame;
 
+        public MailinatorCheck OpenMail()  {
             inboxName.sendKeys(inboxNameText);
             goButton.click();
             return new MailinatorCheck(driver);
         }
 
-        public void GoToMail() throws InterruptedException {
+        public MailinatorCheck GoToMail(){
+            waitForVisibility(openMail);
             openMail.click();
-            wait(100);
+            driver.switchTo().frame(mailFrame);
+            return new MailinatorCheck(driver);
         }
+
         public String GetSender(){
+
             return openMail.getText();
         }
+
         public String GetSubject() {
             return subject.getText();
         }
+
 
         public String GetText() {
             return text.getText();
