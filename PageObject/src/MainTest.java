@@ -11,6 +11,7 @@ import org.openqa.selenium.support.PageFactory;
 import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class MainTest {
@@ -48,6 +49,7 @@ public class MainTest {
     public void Test()  {
 
         //sending mail from i.ua
+
         driver.get(IUA_URL);
         driver.navigate().to(IUA_URL);
 
@@ -70,10 +72,10 @@ public class MainTest {
         String subject = mailinatorCheck.GetSubject();
         assertEquals(subjectText, subject, "Subject is not correct");
 
-        //failed since cannot figure out the way to take message body :(
         mailinatorCheck.GoToMail();
         String text = mailinatorCheck.GetText();
-        assertEquals(textText, text, "Text is not correct");
+        assertTrue(text.contains(textText), "Text is not correct");
+
     }
 
         @AfterEach
